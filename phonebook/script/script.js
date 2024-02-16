@@ -95,12 +95,13 @@ const data = [
     thead.insertAdjacentHTML(
       "beforeend",
       ` 
-    <tr>
-    <th class='delete'>Удалить</th>
-    <th>Имя</th>
-    <th>Фамилия</th>
-    <th>Телефон</th>
-    </tr>`
+      <tr>
+        <th class='delete'>Удалить</th>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Телефон</th>
+      </tr>
+      `
     );
     const tbody = document.createElement("tbody");
     table.append(thead, tbody);
@@ -121,20 +122,21 @@ const data = [
       <button class="close" type="button"></button>
       <h2 class="form-title">Добавить контакты</h2>
       <div class="form-group">
-      <label class="form-label" for="name">Имя:</label>
-      <input class="form-input" name="name" 
-      id="name" type="text" required>
+        <label class="form-label" for="name">Имя:</label>
+        <input class="form-input" name="name" 
+        id="name" type="text" required>
       </div>
       <div class="form-group">
-      <label class="form-label" for="surname">Фамилия:</label>
-      <input class="form-input" name="surname" 
-      id="surname" type="text" required>
+        <label class="form-label" for="surname">Фамилия:</label>
+        <input class="form-input" name="surname" 
+        id="surname" type="text" required>
       </div>
       <div class="form-group">
-      <label class="form-label" for="phone">Телефон:</label>
-      <input class="form-input" name="phone" 
-      id="phone" type="number" required>
-      </div>`
+        <label class="form-label" for="phone">Телефон:</label>
+        <input class="form-input" name="phone" 
+        id="phone" type="number" required>
+      </div>
+      `
     );
 
     const buttonGroup = createButtonsGroup([
@@ -174,11 +176,11 @@ const data = [
 
   const renderPhoneBook = (app, title) => {
     const header = createHeader();
-    const logoHeader = createLogo(`Телефонный справочник. ${title}`);
+    const logo = createLogo(`Телефонный справочник. ${title}`);
     const main = createMain();
     const buttonGroup = createButtonsGroup([
       {
-        className: "btn btn-primary mr-3",
+        className: "btn btn-primary mr-3 js-add",
         type: "button",
         text: "Добавить",
       },
@@ -193,7 +195,7 @@ const data = [
     const footer = createFooter();
     const logoFooter = createTitle(`Все права защищены ©${title}`);
 
-    header.headerContainer.append(logoHeader);
+    header.headerContainer.append(logo);
     footer.footerContainer.append(logoFooter);
     main.mainContainer.append(buttonGroup.btnWrapper, table, form.overlay);
 
@@ -201,6 +203,10 @@ const data = [
 
     return {
       list: table.tbody,
+      logo,
+      btnAdd: buttonGroup.btns[0],
+      formOverlay: form.overlay,
+      form: form.form,
     };
   };
 
@@ -221,6 +227,7 @@ const data = [
     const phoneLink = document.createElement("a");
     phoneLink.href = `tel: ${phone}`;
     phoneLink.textContent = phone;
+    tr.phoneLink = phoneLink;
     tdPhone.append(phoneLink);
 
     tr.append(tdDel, tdName, tdSurname, tdPhone);
@@ -231,15 +238,43 @@ const data = [
   const renderContacts = (elem, data) => {
     const allRow = data.map(createRow);
     elem.append(...allRow);
+
+    return allRow;
+  };
+
+  const hoverRow = (allRow, logo) => {
+    const text = logo.textContent;
+    allRow.forEach((contact) => {
+      contact.addEventListener("mouseenter", () => {
+        logo.textContent = contact.phoneLink.textContent;
+      });
+      contact.addEventListener("mouseleave", () => {
+        logo.textContent = text;
+      });
+    });
   };
 
   const init = (selectorApp, title) => {
     const app = document.querySelector(selectorApp);
     const phoneBook = renderPhoneBook(app, title);
 
-    const { list } = phoneBook;
+    const { list, logo, btnAdd, formOverlay, form } = phoneBook;
 
-    renderContacts(list, data);
+    const allRow = renderContacts(list, data);
+
+    hoverRow(allRow, logo);
+
+    btnAdd.addEventListener("click", () => {
+      formOverlay.classList.add("is-visible");
+    });
+
+    form.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    formOverlay.addEventListener("click", () => {
+      formOverlay.classList.remove("is-visible");
+    });
   };
 
   window.phoneBookInit = init;

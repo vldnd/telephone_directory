@@ -113,7 +113,7 @@
         "properties": "never"
       }
     ],
-    "comma-dangle": ["error", "always-multiline"],
+    "comma-dangle": "off",
     "comma-spacing": "error",
     "comma-style": "error",
     "computed-property-spacing": "error",
@@ -163,7 +163,7 @@
     "no-new-object": "error",
     "no-tabs": "error",
     "no-trailing-spaces": "error",
-    "object-curly-spacing": "error",
+    "object-curly-spacing": "off",
     "one-var": [
       "error",
       {
