@@ -50,6 +50,13 @@ const data = [
     return h1;
   };
 
+  const createTitle = (title) => {
+    const p = document.createElement("p");
+    p.textContent = title;
+
+    return p;
+  };
+
   const createMain = () => {
     const main = document.createElement("main");
 
@@ -184,7 +191,7 @@ const data = [
     const table = createTable();
     const form = createForm();
     const footer = createFooter();
-    const logoFooter = createLogo(`Все права защищены ©${title}`);
+    const logoFooter = createTitle(`Все права защищены ©${title}`);
 
     header.headerContainer.append(logoHeader);
     footer.footerContainer.append(logoFooter);
